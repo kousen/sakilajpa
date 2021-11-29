@@ -10,6 +10,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -20,18 +23,18 @@ public class CityTestContainersTest {
             .withUsername("test")
             .withPassword("test")
             .withEnv("MYSQL_ROOT_PASSWORD", "test")
-            // .withInitScript("sakila-schema.sql") // java.sql.SQLException: Failed to open the referenced table 'city'
+            .withCopyFileToContainer(
+                    MountableFile.forClasspathResource("sakila-both.sql"),
+                    "/docker-entrypoint-initdb.d/schema.sql"
+            )
             .withDatabaseName("sakila");
 
     @Autowired
     private CityRepository repository;
 
     @Test
-    // @Sql(scripts = {"classpath:sakila-schema.sql", "classpath:sakila-data.sql"})
-    // same exception as above
     public void test() {
-        long count = repository.count();
-        System.out.println("There are " + count + " cities in the db");
+        assertEquals(600, repository.count());
     }
 
     @DynamicPropertySource
