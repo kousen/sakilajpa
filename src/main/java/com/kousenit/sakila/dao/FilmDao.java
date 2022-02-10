@@ -14,6 +14,7 @@ public class FilmDao {
     private final SimpleJdbcCall procFilmsInStock;
     private final SimpleJdbcCall procFilmsNotInStock;
     private final SimpleJdbcCall procRewardsReport;
+    private final SimpleJdbcCall funcInventoryHeldByCustomer;
 
     @Autowired
     public FilmDao(DataSource dataSource) {
@@ -23,6 +24,8 @@ public class FilmDao {
                 .withProcedureName("film_not_in_stock");
         procRewardsReport = new SimpleJdbcCall(dataSource)
                 .withProcedureName("rewards_report");
+        funcInventoryHeldByCustomer = new SimpleJdbcCall(dataSource)
+                .withFunctionName("inventory_held_by_customer");
     }
 
     public int getFilmsInStock(Integer filmId, Integer storeId) {
@@ -47,5 +50,11 @@ public class FilmDao {
                 .addValue("min_dollar_amount_purchased", minDollarAmountPurchased);
         Map<String, Object> out = procRewardsReport.execute(in);
         return (int) out.get("count_rewardees");
+    }
+
+    public int getInventoryHeldByCustomer(Integer id) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("p_inventory_id", id);
+        return funcInventoryHeldByCustomer.executeFunction(Integer.class, in);
     }
 }

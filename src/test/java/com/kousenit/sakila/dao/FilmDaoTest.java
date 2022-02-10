@@ -31,4 +31,10 @@ class FilmDaoTest {
         // returning 0, though the docs say it should be 42
         assertEquals(0, count);
     }
+
+    @Test
+    void inventoryHeldByCustomer() {
+        int count = dao.getInventoryHeldByCustomer(9);
+        assertEquals(366, count);
+    }
 }
