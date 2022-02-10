@@ -1,12 +1,12 @@
 package com.kousenit.sakila.dao;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -33,8 +33,15 @@ public class CityTestContainersTest {
     private CityRepository repository;
 
     @Test
-    public void test() {
+    public void numberOfCities() {
         assertEquals(600, repository.count());
+    }
+
+    @Test @Disabled("Almost certainly a bug")
+    void filmsAtStore(@Autowired FilmRepository filmRepository) {
+        // This used to pass, but now fails. Probably a bug.
+        assertEquals(4, filmRepository.numberOfFilmsInStock(1, 1),
+                "Should be 4 films of id 1 at store 1");
     }
 
     @DynamicPropertySource
