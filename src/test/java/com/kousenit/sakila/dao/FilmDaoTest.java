@@ -16,7 +16,8 @@ class FilmDaoTest {
     @Test
     void getFilmsInStock() {
         int filmsInStock = dao.getFilmsInStock(1, 1);
-        assertEquals(4, filmsInStock, "Should be 4 copies of film 1 at store 1");
+        assertEquals(4, filmsInStock,
+                "Should be 4 copies of film 1 at store 1");
     }
 
     @Test
