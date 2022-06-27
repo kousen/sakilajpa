@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface CountryRepository extends JpaRepository<Country,Integer> {
     Country findByName(String name);
-    List<Country> findAllByNameContaining(String name);
+    List<Country> findAllByNameContainingIgnoreCase(String name);
 
     List<Country> findFirst10ByNameContaining(String name);
 
     @Query("select distinct country from Country country " +
             " join fetch country.cities cities" +
-            " where country.name = :name")
+            " where country.name = :name")  // eagerly fetch cities
     Country findByNameWithCities(String name);
 
 //    @EntityGraph(value = "graph.Country.cities",

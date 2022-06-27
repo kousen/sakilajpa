@@ -15,9 +15,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Transactional
 class CountryRepositoryTest {
     @Autowired
     private CountryRepository repository;
+
+    @Test
+    void findByName() {
+        Country india = repository.findByName("India");
+        System.out.println(india);
+        System.out.println(india.getCities());  // cities fetched "lazily"
+    }
+
+    @Test
+    void findAllByNameContaining() {
+        List<Country> countries = repository.findAllByNameContainingIgnoreCase("in");
+        countries.forEach(System.out::println);
+    }
 
     @Test
     void getCountries() {
@@ -41,7 +55,7 @@ class CountryRepositoryTest {
         List<Country> countries = repository.findFirst10ByNameContaining("an");
         countries.forEach(country -> {
             System.out.println(country);
-            assertTrue(country.getName().toLowerCase(Locale.ROOT).contains("an"));
+            assertTrue(country.getName().toLowerCase().contains("an"));
         });
         assertEquals(10, countries.size());
     }
