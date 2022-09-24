@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,9 +69,8 @@ class CountryRepositoryTest {
     @Test
     void eagerFetchWithEntityGraphs() {
         List<Country> countries = repository.findAllByNameContains("un");
-        countries.forEach(country -> {
-            System.out.println(country.getName() +
-                    " has " + country.getCities().size() + " cities");
-        });
+        countries.forEach(country ->
+                System.out.println(country.getName() +
+                " has " + country.getCities().size() + " cities"));
     }
 }

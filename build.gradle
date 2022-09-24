@@ -21,7 +21,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    testImplementation platform('org.testcontainers:testcontainers-bom:1.16.2')
+    testImplementation platform('org.testcontainers:testcontainers-bom:1.17.3')
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
 }
