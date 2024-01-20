@@ -6,6 +6,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 import javax.sql.DataSource;
 import java.util.Map;
 
@@ -15,6 +19,8 @@ public class FilmDao {
     private final SimpleJdbcCall procFilmsNotInStock;
     private final SimpleJdbcCall procRewardsReport;
     private final SimpleJdbcCall funcInventoryHeldByCustomer;
+	@PersistenceContext
+	private EntityManager em;
 
     @Autowired
     public FilmDao(DataSource dataSource) {
@@ -57,4 +63,16 @@ public class FilmDao {
                 .addValue("p_inventory_id", id);
         return funcInventoryHeldByCustomer.executeFunction(Integer.class, in);
     }
+	
+	public int getFilmsInStockAtStore(Integer p_film_id, Integer p_store_id){
+		StoredProcedureQuery getStock = em.createStoredProcedureQuery("film_in_stock");
+		getStock.registerStoredProcedureParameter("p_film_id", Integer.class, ParameterMode.IN);
+		getStock.setParameter("p_film_id", p_film_id);
+		getStock.registerStoredProcedureParameter("p_store_id", Integer.class, ParameterMode.IN);
+		getStock.setParameter("p_store_id", p_store_id);
+		getStock.registerStoredProcedureParameter("p_film_count", Integer.class, ParameterMode.OUT);
+		getStock.execute();
+		Integer stock = (Integer)getStock.getOutputParameterValue("p_film_count");
+		return stock;
+	}
 }

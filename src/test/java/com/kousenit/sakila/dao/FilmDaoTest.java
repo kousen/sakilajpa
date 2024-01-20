@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -38,4 +39,11 @@ class FilmDaoTest {
         int count = dao.getInventoryHeldByCustomer(9);
         assertEquals(366, count);
     }
+	
+	@Test
+	void invokeFilmInStockStoredProcedureUsingProcName() {
+		int stock = dao.getFilmsInStockAtStore(1,1);
+		System.out.println("There is/are " + stock + " copies of film 1 at store 1");
+		assertThat(stock).isEqualTo(4);
+	}
 }
